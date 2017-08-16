@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 
 import json
 
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions
 from django.contrib.auth.models import User
@@ -74,10 +75,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 def get_auth_token_without_secret(request):
     data = request.POST.get('email')
     isVarified = request.POST.get('isvarified')
-    if(isVarified):
-        user = User.objects.get(email=data)
-        token = Token.objects.get(user = user)
-        authtoken = {'bonapacheT': str(token)}
-        return JsonResponse(authtoken)
-    else:
-        return HttpResponse('what do you think you are !')
+    user = User.objects.get(email=data)
+    token = Token.objects.get(user = user)
+    authtoken = {'bonapacheT': str(token)}
+    return JsonResponse(authtoken)
