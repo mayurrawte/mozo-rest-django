@@ -25,6 +25,18 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
+@csrf_exempt
+def get_auth_token_without_secret(request):
+    data = request.POST.get('email')
+    isverified = request.POST.get('isvarified')
+
+    user = User.objects.get(username=data)
+    print user
+    token = Token.objects.get(user = user)
+    authtoken = {'bonapacheT': str(token)}
+    return JsonResponse(authtoken)
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -71,11 +83,3 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(fromUser=self.request.user)
 
-@csrf_exempt
-def get_auth_token_without_secret(request):
-    data = request.POST.get('email')
-    isVarified = request.POST.get('isvarified')
-    user = User.objects.get(email=data)
-    token = Token.objects.get(user = user)
-    authtoken = {'bonapacheT': str(token)}
-    return JsonResponse(authtoken)
