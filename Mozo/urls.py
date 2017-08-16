@@ -17,8 +17,9 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 
-from mozorest.views import ExpenseViewSet, AccountViewSet, UserViewSet, UserDetailViewSet, TransactionViewSet
+from mozorest.views import ExpenseViewSet, AccountViewSet, UserViewSet, UserDetailViewSet, TransactionViewSet, get_auth_token_without_secret
 from rest_framework.authtoken import views
+
 
 router = routers.DefaultRouter()
 router.register(r'User', UserViewSet)
@@ -31,6 +32,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^auth-social/',get_auth_token_without_secret)
 ]
 
 

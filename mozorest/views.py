@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+import json
+
+from django.http.response import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions
 from django.contrib.auth.models import User
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
@@ -65,3 +70,12 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(fromUser=self.request.user)
 
+@csrf_exempt
+def get_auth_token_without_secret(request):
+    data = request.POST.get('email')
+    isVarified = request.POST.get('isvarified')
+    if(isVarified):
+        user = User.objects.get(email=data)
+        token = Token.objects.get(user = user)
+
+        return HttpResponse(type(str(token)))

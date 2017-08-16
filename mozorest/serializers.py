@@ -3,7 +3,6 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import UserDetails, Account, Transactions, Expenses
-from rest_framework.authtoken.models import Token
 
 
 class UserDetailsSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,6 +38,7 @@ class TransactionsSerializer(serializers.HyperlinkedModelSerializer):
 
 class ExpensesSerializer(serializers.HyperlinkedModelSerializer):
     expenseUser = serializers.ReadOnlyField(source='expenseUser.username')
+
     class Meta:
         model = Expenses
         fields = ('__all__')
