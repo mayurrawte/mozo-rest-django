@@ -154,3 +154,4 @@ fabric.properties
 sqlite3.db
 settings.py
 db.sqlite3
+migrations/

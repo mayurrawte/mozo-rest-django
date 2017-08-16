@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import UserDetails, Account, Transactions, Expenses
+from rest_framework.authtoken.models import Token
 
 
 class UserDetailsSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,7 +18,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField()
 
     def create(self, validated_data):
-        print json.dumps(validated_data)
         user = User.objects.create(username=validated_data['email'], email=validated_data['email'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
         user.set_password(validated_data['password'])
         user.save()
