@@ -77,5 +77,6 @@ def get_auth_token_without_secret(request):
     if(isVarified):
         user = User.objects.get(email=data)
         token = Token.objects.get(user = user)
-
         return HttpResponse(type(str(token)))
+    else:
+        return HttpResponse('what do you think you are !')
