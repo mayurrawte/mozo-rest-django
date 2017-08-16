@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
 
-from django.http.response import HttpResponse
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets, permissions
-from django.contrib.auth.models import User
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 
-from .serializers import UserSerializer, AccountSerializer, ExpensesSerializer, TransactionsSerializer, UserDetailsSerializer
+from rest_framework import viewsets, permissions, views
+from django.contrib.auth.models import User
+from rest_framework.authentication import TokenAuthentication
+
+
+from .serializers import UserSerializer, AccountSerializer, ExpensesSerializer, TransactionsSerializer, \
+    UserDetailsSerializer
 from .models import Account, Expenses, UserDetails, Transactions
 
 from django.conf import settings
@@ -23,18 +23,6 @@ from rest_framework.authtoken.models import Token
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-
-@csrf_exempt
-def get_auth_token_without_secret(request):
-    data = request.POST.get('email')
-    isverified = request.POST.get('isvarified')
-
-    user = User.objects.get(username=data)
-    print user
-    token = Token.objects.get(user = user)
-    authtoken = {'bonapacheT': str(token)}
-    return JsonResponse(authtoken)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -83,3 +71,17 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(fromUser=self.request.user)
 
+
+class TokenViewSet(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        print request.data['email']
+        data = request.data['email']
+        if request.data['isvarified']:
+            user = User.objects.get(email=data)
+            token = Token.objects.get(user=user)
+            authtoken = {'bonapacheT': str(token)}
+            return JsonResponse(authtoken)
+        else:
+            return JsonResponse({'error': 'maakda'})

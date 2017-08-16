@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import UserDetails, Account, Transactions, Expenses
+from rest_framework.authtoken.models import Token
 
 
 class UserDetailsSerializer(serializers.HyperlinkedModelSerializer):
@@ -50,5 +51,4 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Account
         fields = ('__all__')
-
 
