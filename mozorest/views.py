@@ -72,16 +72,17 @@ class TransactionViewSet(viewsets.ModelViewSet):
         serializer.save(fromUser=self.request.user)
 
 
-class TokenViewSet(views.APIView):
-    permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
-        print request.data['email']
-        data = request.data['email']
-        if request.data['isvarified']:
-            user = User.objects.get(email=data)
-            token = Token.objects.get(user=user)
-            authtoken = {'bonapacheT': str(token)}
-            return JsonResponse(authtoken)
-        else:
-            return JsonResponse({'error': 'maakda'})
+# class TokenViewSet(views.APIView):
+#     permission_classes = (permissions.AllowAny,)
+#
+#     def post(self, request):
+#         print request.data['email']
+#         data = request.data['email']
+#         if request.data['isvarified']:
+#             user = User.objects.get(email=data)
+#             token = Token.objects.get(user=user)
+#             authtoken = {'bonapacheT': str(token)}
+#             return JsonResponse(authtoken)
+#         else:
+#             return JsonResponse({'error': 'maakda'})
