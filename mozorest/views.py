@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 
@@ -6,8 +5,9 @@ from django.http import JsonResponse
 
 from rest_framework import viewsets, permissions, views
 from django.contrib.auth.models import User
-from rest_framework.authentication import TokenAuthentication
-
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
 
 from .serializers import UserSerializer, AccountSerializer, ExpensesSerializer, TransactionsSerializer, \
     UserDetailsSerializer
@@ -28,14 +28,14 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
     permission_classes = (permissions.AllowAny,)
 
 
 class AccountViewSet(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
@@ -45,7 +45,7 @@ class AccountViewSet(viewsets.ModelViewSet):
 class ExpenseViewSet(viewsets.ModelViewSet):
     queryset = Expenses.objects.all()
     serializer_class = ExpensesSerializer
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
@@ -72,6 +72,11 @@ class TransactionViewSet(viewsets.ModelViewSet):
         serializer.save(fromUser=self.request.user)
 
 
+class CustomObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        return Response({'token': token.key, 'id': token.user_id})
 
 # class TokenViewSet(views.APIView):
 #     permission_classes = (permissions.AllowAny,)
