@@ -18,7 +18,7 @@ from django.contrib import admin
 from rest_framework import routers
 
 from mozorest.views import ExpenseViewSet, AccountViewSet, UserViewSet, UserDetailViewSet, TransactionViewSet, \
-    CustomObtainAuthToken
+    CustomObtainAuthToken, SocialAuthFacebook, SocialAuthGoogle
 from rest_framework.authtoken import views
 
 
@@ -34,8 +34,9 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^ObtainUserWithToken', CustomObtainAuthToken.as_view())
-    #url(r'^auth-social/', TokenViewSet.as_view())
+    url(r'^ObtainUserWithToken', CustomObtainAuthToken.as_view()),
+    url(r'^social-fb/', SocialAuthFacebook),
+    url(r'^social-google/', SocialAuthGoogle)
 ]
 
 
