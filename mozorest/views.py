@@ -123,6 +123,7 @@ def SocialAuthFacebook(request):
                         userDetail.userFacebookId = data['id']
                     userDetail.userPicUrl = data['picture']
                     userDetail.save()
+                    userDetailSerializer = UserDetailsSerializer(userDetail)
                     token, created = Token.objects.get_or_create(user=user)
             resData = {'token': token.key, 'userData': serializer.data, 'userDetail': userDetailSerializer.data}
         return Response(resData)
@@ -144,6 +145,11 @@ def SocialAuthGoogle(request):
                 user = User.objects.get(username=data['email'])
                 serializer = UserSerializer(user)
                 token = Token.objects.get(user=user)
+                userDetail, created = UserDetails.objects.get_or_create(userId=user)
+                if created:
+                    userDetail.userGoogleId = data['id']
+                    userDetail.userPicUrl = data['picture']
+                userDetailSerializer = UserDetailsSerializer(userDetail)
             except User.DoesNotExist:
                 newUser = {'username': data['email'], 'email': data['email'], 'first_name': data['given_name'],
                            'last_name': data['family_name'], 'password': 'shotu123'}
@@ -152,8 +158,10 @@ def SocialAuthGoogle(request):
                     serializer.save()
                     user = User.objects.get(username=serializer.data['email'])
                     userDetail, created = UserDetails.objects.get_or_create(userId=user)
-                    userDetail.userGoogleId = data['id']
+                    if created:
+                        userDetail.userGoogleId = data['id']
                     userDetail.save()
+                    userDetailSerializer = UserDetailsSerializer(userDetail)
                     token, created = Token.objects.get_or_create(user=user)
-            resData = {'token': token.key, 'userData': serializer.data}
+            resData = {'token': token.key, 'userData': serializer.data, 'userDetail': userDetailSerializer.data}
         return Response(resData)
