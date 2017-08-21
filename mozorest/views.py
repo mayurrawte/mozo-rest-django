@@ -110,6 +110,7 @@ def SocialAuthFacebook(request):
                 if created:
                     userDetail.userFacebookId = data['id']
                 userDetail.userPicUrl = data['picture']
+                userDetail.save()
                 userDetailSerializer = UserDetailsSerializer(userDetail)
             except User.DoesNotExist:
                 newUser = {'username': data['email'], 'email': data['email'], 'first_name': data['first_name'],
@@ -149,6 +150,7 @@ def SocialAuthGoogle(request):
                 if created:
                     userDetail.userGoogleId = data['id']
                     userDetail.userPicUrl = data['picture']
+                userDetail.save()
                 userDetailSerializer = UserDetailsSerializer(userDetail)
             except User.DoesNotExist:
                 newUser = {'username': data['email'], 'email': data['email'], 'first_name': data['given_name'],
