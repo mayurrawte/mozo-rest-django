@@ -160,6 +160,8 @@ def SocialAuthGoogle(request):
                     serializer.save()
                     user = User.objects.get(username=serializer.data['email'])
                     userDetail, created = UserDetails.objects.get_or_create(userId=user)
+                    if created:
+                        userDetail.userPicUrl = data['picture']
                     userDetail.userGoogleId = data['id']
                     userDetail.save()
                     userDetailSerializer = UserDetailsSerializer(userDetail)
