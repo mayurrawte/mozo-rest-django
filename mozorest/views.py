@@ -122,7 +122,7 @@ def SocialAuthFacebook(request):
                     userDetail, created = UserDetails.objects.get_or_create(userId=user)
                     if created:
                         userDetail.userFacebookId = data['id']
-                    userDetail.userPicUrl = data['picture']
+                    userDetail.userPicUrl = data['picture']['data']['url']
                     userDetail.save()
                     userDetailSerializer = UserDetailsSerializer(userDetail)
                     token, created = Token.objects.get_or_create(user=user)
